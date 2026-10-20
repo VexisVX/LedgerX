@@ -18,115 +18,145 @@ import java.io.File;
 
 public class SettingsController {
 
-    @FXML private Label lblDisplayMode;
+    @FXML private Label lblFabPosition, lblFabValue, lblQuickAdd;
     @FXML private Label lblTitle, lblAppearance, lblTheme, lblLanguage, lblCurrency, lblDateMode,
-                        lblSecurity, lblPin, lblBackup;
-    @FXML private ComboBox<String> themeCombo, langCombo, currencyCombo, dateModeCombo, displayModeCombo;
+                        lblSecurity, lblPin, lblBackup, lblCompactMode;
+    @FXML private ComboBox<String> themeCombo, langCombo, currencyCombo, dateModeCombo;
+    @FXML private CheckBox compactModeCheck, quickAddCheck;
+    @FXML private Slider fabOffsetSlider;
     @FXML private Button btnSetPin, btnClearPin, btnBackup, btnRestore, btnSave;
-
-    private static final String[][] THEMES_DISPLAY = {
-        {"auto",       "\uD83C\uDF13  Auto (System)"},
-        {"teal",       "\uD83D\uDFE2  Dark Teal"},
-        {"purple",     "\uD83D\uDFE3  Dark Purple"},
-        {"orange",     "\uD83D\uDFE0  Dark Orange"},
-        {"rose",       "\uD83C\uDF39  Dark Rose"},
-        {"slate",      "\u26AA  Dark Slate"},
-        {"light-teal", "\u2600\uFE0F  Light Teal"},
-        {"light-blue", "\uD83D\uDD35  Light Blue"},
-        {"cream",      "\uD83D\uDFE1  Cream"}
-    };
 
     @FXML
     public void initialize() {
         try {
-            safe(lblTitle, "settings.title");
-            safe(lblAppearance, "settings.appearance");
-            safe(lblTheme, "settings.theme");
-            safe(lblLanguage, "settings.language");
-            safe(lblCurrency, "settings.currency");
-            safe(lblDateMode, "settings.dateMode");
-            safe(lblSecurity, "settings.security");
-            safe(lblPin, "settings.pin");
-            safe(lblBackup, "settings.backup");
+            setSafe(lblTitle, "settings.title", "Settings");
+            setSafe(lblAppearance, "settings.appearance", "Appearance");
+            setSafe(lblTheme, "settings.theme", "Theme");
+            setSafe(lblLanguage, "settings.language", "Language");
+            setSafe(lblCurrency, "settings.currency", "Currency");
+            setSafe(lblDateMode, "settings.dateMode", "Date Format");
+            setSafe(lblSecurity, "settings.security", "Security");
+            setSafe(lblPin, "settings.pin", "PIN Lock");
+            setSafe(lblBackup, "settings.backup", "Backup & Restore");
+            setSafe(lblCompactMode, "settings.compactMode", "Compact sidebar");
 
-            if (btnSetPin != null) btnSetPin.setText(I18n.t("settings.pin.set"));
-            if (btnClearPin != null) btnClearPin.setText(I18n.t("settings.pin.clear"));
-            if (btnBackup != null) btnBackup.setText(I18n.t("settings.backup.create"));
-            if (btnRestore != null) btnRestore.setText(I18n.t("settings.backup.restore"));
-            if (btnSave != null) btnSave.setText(I18n.t("settings.save"));
+            setBtnSafe(btnSetPin, "settings.pin.set", "Set PIN");
+            setBtnSafe(btnClearPin, "settings.pin.clear", "Remove PIN");
+            setBtnSafe(btnBackup, "settings.backup.create", "Backup");
+            setBtnSafe(btnRestore, "settings.backup.restore", "Restore");
+            setBtnSafe(btnSave, "settings.save", "Save");
 
             if (themeCombo != null) {
                 themeCombo.setItems(FXCollections.observableArrayList(
-                    "\uD83C\uDF13  Auto (System)",
-                    "\uD83D\uDFE2  Dark Teal",
-                    "\uD83D\uDFE3  Dark Purple",
-                    "\uD83D\uDFE0  Dark Orange",
-                    "\uD83C\uDF39  Dark Rose",
-                    "\u26AA  Dark Slate",
-                    "\u2600\uFE0F  Light Teal",
-                    "\uD83D\uDD35  Light Blue",
-                    "\uD83D\uDFE1  Cream"));
-                String currentDisplay = displayFor(AppConfig.getTheme());
-                if (currentDisplay != null) themeCombo.setValue(currentDisplay);
-
+                    "Auto (System)",
+                    "Dark Teal", "Dark Purple", "Dark Orange", "Dark Rose", "Dark Slate",
+                    "Light Teal", "Light Blue", "Cream"));
+                themeCombo.setValue(mapThemeToDisplay(AppConfig.getTheme()));
                 themeCombo.valueProperty().addListener((o, a, b) -> {
-                    if (b == null) return;
-                    String themeKey = keyFor(b);
-                    if (themeKey != null) ThemeManager.setTheme(themeKey);
+                    if (b != null && btnSave != null && btnSave.getScene() != null) {
+                        try { ThemeManager.setTheme(btnSave.getScene(), mapDisplayToTheme(b)); }
+                        catch (Exception ignored) {}
+                    }
                 });
             }
 
             if (langCombo != null) {
                 langCombo.setItems(FXCollections.observableArrayList("English", "Persian"));
-                langCombo.setValue("en".equals(AppConfig.getLanguage()) ? "English" : "Persian");
+                langCombo.setValue("fa".equals(AppConfig.getLanguage()) ? "Persian" : "English");
             }
+
             if (currencyCombo != null) {
                 currencyCombo.setItems(FXCollections.observableArrayList("USD", "EUR", "IRT", "IRR"));
                 currencyCombo.setValue(AppConfig.getCurrency());
             }
+
             if (dateModeCombo != null) {
                 dateModeCombo.setItems(FXCollections.observableArrayList("Gregorian", "Jalali"));
                 dateModeCombo.setValue("jalali".equals(AppConfig.getDateMode()) ? "Jalali" : "Gregorian");
+            }
+
+            if (compactModeCheck != null) {
+                compactModeCheck.setSelected(AppConfig.isCompactMode());
+            }
+            if (quickAddCheck != null) {
+                quickAddCheck.setSelected(AppConfig.isShowQuickAdd());
+            }
+            if (fabOffsetSlider != null) {
+                fabOffsetSlider.setValue(AppConfig.getFabOffset());
+                if (lblFabValue != null) lblFabValue.setText((int) fabOffsetSlider.getValue() + " px");
+                fabOffsetSlider.valueProperty().addListener((o, a, b) -> {
+                    if (lblFabValue != null) lblFabValue.setText((int) b.doubleValue() + " px");
+                });
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    private void safe(Label l, String key) { if (l != null) l.setText(I18n.t(key)); }
-
-    private String displayFor(String key) {
-        for (String[] pair : THEMES_DISPLAY) if (pair[0].equals(key)) return pair[1];
-        return null;
+    private void setSafe(Label l, String key, String fallback) {
+        if (l == null) return;
+        String t = I18n.t(key);
+        l.setText(t.startsWith("!") ? fallback : t);
     }
 
-    private String keyFor(String display) {
-        for (String[] pair : THEMES_DISPLAY) if (pair[1].equals(display)) return pair[0];
-        return null;
+    private void setBtnSafe(Button b, String key, String fallback) {
+        if (b == null) return;
+        String t = I18n.t(key);
+        b.setText(t.startsWith("!") ? fallback : t);
     }
 
-    @FXML private void save() {
+    private String mapThemeToDisplay(String theme) {
+        return switch (theme) {
+            case "teal" -> "Dark Teal";
+            case "purple" -> "Dark Purple";
+            case "orange" -> "Dark Orange";
+            case "rose" -> "Dark Rose";
+            case "slate" -> "Dark Slate";
+            case "light-teal" -> "Light Teal";
+            case "light-blue" -> "Light Blue";
+            case "cream" -> "Cream";
+            default -> "Auto (System)";
+        };
+    }
+
+    private String mapDisplayToTheme(String display) {
+        return switch (display) {
+            case "Dark Teal" -> "teal";
+            case "Dark Purple" -> "purple";
+            case "Dark Orange" -> "orange";
+            case "Dark Rose" -> "rose";
+            case "Dark Slate" -> "slate";
+            case "Light Teal" -> "light-teal";
+            case "Light Blue" -> "light-blue";
+            case "Cream" -> "cream";
+            default -> "auto";
+        };
+    }
+
+    @FXML
+    private void save() {
         try {
-            String themeDisplay = themeCombo != null ? themeCombo.getValue() : null;
-            String themeKey = keyFor(themeDisplay);
-            if (themeKey != null) AppConfig.setTheme(themeKey);
+            if (themeCombo != null && themeCombo.getValue() != null)
+                AppConfig.setTheme(mapDisplayToTheme(themeCombo.getValue()));
 
             if (currencyCombo != null && currencyCombo.getValue() != null)
                 AppConfig.setCurrency(currencyCombo.getValue());
 
-            if (dateModeCombo != null && dateModeCombo.getValue() != null) {
-                boolean jalali = "Jalali".equals(dateModeCombo.getValue());
-                AppConfig.setDateMode(jalali ? "jalali" : "gregorian");
+            if (dateModeCombo != null && dateModeCombo.getValue() != null)
+                AppConfig.setDateMode("Jalali".equals(dateModeCombo.getValue()) ? "jalali" : "gregorian");
 
-            if (displayModeCombo != null && displayModeCombo.getValue() != null) {
-                String iconText = I18n.t("settings.displayMode.icon");
-                AppConfig.setDisplayMode(displayModeCombo.getValue().equals(iconText) ? "icon" : "text");
+            if (compactModeCheck != null) {
+                AppConfig.setCompactMode(compactModeCheck.isSelected());
             }
+            if (fabOffsetSlider != null) {
+                AppConfig.setFabOffset((int) fabOffsetSlider.getValue());
+            }
+            if (quickAddCheck != null) {
+                AppConfig.setShowQuickAdd(quickAddCheck.isSelected());
             }
 
-            String langDisplay = langCombo != null ? langCombo.getValue() : null;
-            if (langDisplay != null) {
-                String newLang = "English".equals(langDisplay) ? "en" : "fa";
+            if (langCombo != null && langCombo.getValue() != null) {
+                String newLang = "English".equals(langCombo.getValue()) ? "en" : "fa";
                 I18n.setLanguage(newLang);
             }
 
@@ -144,30 +174,22 @@ public class SettingsController {
     }
 
     @FXML private void setPin() {
-        try {
-            TextInputDialog d = new TextInputDialog();
-            d.setTitle(I18n.t("settings.pin.set"));
-            d.setContentText(I18n.t("settings.pin.prompt"));
-            d.showAndWait().ifPresent(txt -> {
-                if (isValidPin(txt)) {
-                    PinService.setPin(txt);
-                    Toast.success(getWindow(), I18n.t("settings.pin.saved"));
-                } else {
-                    Toast.error(getWindow(), I18n.t("settings.pin.wrong"));
-                }
-            });
-        } catch (Exception e) { Toast.error(getWindow(), e.getMessage()); }
-    }
-
-    private boolean isValidPin(String txt) {
-        if (txt == null || txt.length() != 4) return false;
-        for (int i = 0; i < 4; i++) if (!Character.isDigit(txt.charAt(i))) return false;
-        return true;
+        TextInputDialog d = new TextInputDialog();
+        d.setTitle("Set PIN");
+        d.setContentText("Enter new 4-digit PIN:");
+        d.showAndWait().ifPresent(txt -> {
+            if (txt.matches("\\d{4}")) {
+                PinService.setPin(txt);
+                Toast.success(getWindow(), "PIN saved");
+            } else {
+                Toast.error(getWindow(), "PIN must be 4 digits");
+            }
+        });
     }
 
     @FXML private void clearPin() {
         PinService.clearPin();
-        Toast.success(getWindow(), I18n.t("settings.pin.removed"));
+        Toast.success(getWindow(), "PIN removed");
     }
 
     @FXML private void backup() {
@@ -175,18 +197,24 @@ public class SettingsController {
             FileChooser fc = new FileChooser();
             fc.setInitialFileName("ledgerx-backup.db");
             File f = fc.showSaveDialog(getWindow());
-            if (f != null) { BackupService.backup(f); Toast.success(getWindow(), I18n.t("settings.backup.done")); }
+            if (f != null) {
+                BackupService.backup(f);
+                Toast.success(getWindow(), "Backup created");
+            }
         } catch (Exception e) { Toast.error(getWindow(), e.getMessage()); }
     }
 
     @FXML private void restore() {
+        Alert a = new Alert(Alert.AlertType.CONFIRMATION, "This will overwrite current data. Continue?");
+        if (a.showAndWait().filter(b -> b == ButtonType.OK).isEmpty()) return;
         try {
-            Alert a = new Alert(Alert.AlertType.CONFIRMATION, I18n.t("settings.backup.warning"));
-            if (a.showAndWait().filter(b -> b == ButtonType.OK).isEmpty()) return;
             FileChooser fc = new FileChooser();
             fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("DB", "*.db"));
             File f = fc.showOpenDialog(getWindow());
-            if (f != null) { BackupService.restore(f); Toast.success(getWindow(), I18n.t("settings.backup.restored")); }
+            if (f != null) {
+                BackupService.restore(f);
+                Toast.success(getWindow(), "Restored. Restart app.");
+            }
         } catch (Exception e) { Toast.error(getWindow(), e.getMessage()); }
     }
 

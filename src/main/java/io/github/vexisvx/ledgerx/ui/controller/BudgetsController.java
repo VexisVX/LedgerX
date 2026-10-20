@@ -5,10 +5,8 @@ import io.github.vexisvx.ledgerx.model.Category;
 import io.github.vexisvx.ledgerx.model.TransactionType;
 import io.github.vexisvx.ledgerx.service.BudgetService;
 import io.github.vexisvx.ledgerx.service.CategoryService;
-import io.github.vexisvx.ledgerx.ui.component.Icons;
 import io.github.vexisvx.ledgerx.ui.component.InputFilter;
 import io.github.vexisvx.ledgerx.ui.component.Toast;
-import io.github.vexisvx.ledgerx.ui.theme.ThemeManager;
 import io.github.vexisvx.ledgerx.ui.i18n.I18n;
 import io.github.vexisvx.ledgerx.util.Formatter;
 import io.github.vexisvx.ledgerx.util.Validator;
@@ -34,11 +32,34 @@ public class BudgetsController {
 
     @FXML
     public void initialize() {
-        lblTitle.setText(I18n.t("budget.title"));
-        btnNew.setText("+ " + I18n.t("budget.new"));
-        lblEmptyTitle.setText(I18n.t("budget.empty.title"));
-        lblEmptyDesc.setText(I18n.t("budget.empty.desc"));
+        if (lblTitle != null) lblTitle.setText(I18n.t("budget.title"));
+        if (btnNew != null) btnNew.setText(I18n.t("budget.new"));
+
+        ensureCategories();
         render();
+    }
+
+    private void ensureCategories() {
+        if (categoryService.getByType(TransactionType.EXPENSE).isEmpty()) {
+            seedCategories();
+        }
+    }
+
+    private void seedCategories() {
+        try {
+            String[] names = {"Food", "Transport", "Housing", "Shopping", "Health", "Bills", "Entertainment"};
+            for (String name : names) {
+                Category c = new Category();
+                c.setName(name);
+                c.setNameEn(name);
+                c.setType(TransactionType.EXPENSE);
+                c.setIcon(name);
+                categoryService.create(c);
+            }
+            System.out.println(">>> Seeded " + names.length + " expense categories");
+        } catch (Exception e) {
+            System.err.println(">>> Seed failed: " + e.getMessage());
+        }
     }
 
     private void render() {
@@ -47,14 +68,18 @@ public class BudgetsController {
         List<Budget> budgets = budgetService.getAllWithSpending(now.getYear(), now.getMonthValue());
 
         if (budgets.isEmpty()) {
-            emptyState.setVisible(true);
-            emptyState.setManaged(true);
+            if (emptyState != null) {
+                emptyState.setVisible(true);
+                emptyState.setManaged(true);
+            }
             budgetGrid.setVisible(false);
             budgetGrid.setManaged(false);
             return;
         }
-        emptyState.setVisible(false);
-        emptyState.setManaged(false);
+        if (emptyState != null) {
+            emptyState.setVisible(false);
+            emptyState.setManaged(false);
+        }
         budgetGrid.setVisible(true);
         budgetGrid.setManaged(true);
 
@@ -71,66 +96,54 @@ public class BudgetsController {
         if (pct >= 100) card.getStyleClass().add("danger");
         else if (pct >= 80) card.getStyleClass().add("warn");
 
-        // Header: icon + name + actions
-        HBox header = new HBox();
-        header.getStyleClass().add("budget-header");
-
-        Label icon = new Label("[" + (b.getCategoryName() != null ? b.getCategoryName().substring(0, Math.min(2, b.getCategoryName().length())) : "?") + "]");
-        icon.getStyleClass().add("budget-icon");
-        icon.setStyle("-fx-text-fill: -fx-accent; -fx-font-weight: 800; -fx-font-size: 14px;");
+        HBox header = new HBox(10);
+        header.setAlignment(Pos.CENTER_LEFT);
 
         Label name = new Label(b.getCategoryName());
         name.getStyleClass().add("budget-name");
         HBox.setHgrow(name, Priority.ALWAYS);
 
-        HBox actions = new HBox();
-        actions.getStyleClass().add("budget-actions");
+        HBox actions = new HBox(6);
+        actions.setAlignment(Pos.CENTER_RIGHT);
         Button editBtn = new Button(I18n.t("btn.edit"));
         editBtn.getStyleClass().add("action-btn-text");
-        editBtn.setTooltip(new Tooltip(I18n.t("budget.edit")));
         editBtn.setOnAction(e -> showEditDialog(b));
 
         Button delBtn = new Button(I18n.t("btn.delete"));
         delBtn.getStyleClass().addAll("action-btn-text", "danger");
-        delBtn.setTooltip(new Tooltip(I18n.t("budget.delete")));
         delBtn.setOnAction(e -> deleteBudget(b));
 
         actions.getChildren().addAll(editBtn, delBtn);
 
-        header.getChildren().addAll(icon, name, actions);
+        header.getChildren().addAll(name, actions);
 
-        // Amounts
-        HBox amounts = new HBox();
-        amounts.getStyleClass().add("budget-amount-row");
+        HBox amounts = new HBox(8);
+        amounts.setAlignment(Pos.BASELINE_LEFT);
         Label spent = new Label(Formatter.money(b.getSpent()));
         spent.getStyleClass().add("budget-spent");
         Label limit = new Label("/ " + Formatter.money(b.getMonthlyLimit()));
         limit.getStyleClass().add("budget-limit");
         amounts.getChildren().addAll(spent, limit);
 
-        // Progress
         ProgressBar bar = new ProgressBar(Math.min(pct / 100.0, 1.0));
         bar.getStyleClass().add("budget-progress");
         bar.setMaxWidth(Double.MAX_VALUE);
+        if (pct >= 100) bar.getStyleClass().add("danger");
+        else if (pct >= 80) bar.getStyleClass().add("warn");
 
-        // Meta: percent + remaining
-        HBox meta = new HBox();
-        meta.getStyleClass().add("budget-meta");
+        HBox meta = new HBox(8);
         Label percentLbl = new Label(String.format("%.0f%%", pct));
         percentLbl.getStyleClass().add("budget-percent");
         String color = pct >= 100 ? "#ff6b6b" : pct >= 80 ? "#f5a623" : "#00d4aa";
-        percentLbl.setStyle("-fx-text-fill: " + color + "; -fx-font-size: 12px; -fx-font-weight: 800;");
+        percentLbl.setStyle("-fx-text-fill: " + color + ";");
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
         BigDecimal remaining = b.getMonthlyLimit().subtract(b.getSpent());
-        String remainText;
-        if (remaining.compareTo(BigDecimal.ZERO) >= 0) {
-            remainText = I18n.t("budget.remainingLabel") + ": " + Formatter.money(remaining);
-        } else {
-            remainText = I18n.t("budget.over") + ": " + Formatter.money(remaining.abs());
-        }
+        String remainText = remaining.compareTo(BigDecimal.ZERO) >= 0
+            ? I18n.t("budget.remainingLabel") + ": " + Formatter.money(remaining)
+            : I18n.t("budget.over") + ": " + Formatter.money(remaining.abs());
         Label remainingLbl = new Label(remainText);
         remainingLbl.getStyleClass().add("budget-remaining");
 
@@ -140,26 +153,14 @@ public class BudgetsController {
         return card;
     }
 
-    private String categoryIcon(String name) {
-        if (name == null) return "\uD83D\uDCC1";
-        String n = name.toLowerCase();
-        if (n.contains("food") || n.contains("خوراک")) return "\uD83C\uDF54";
-        if (n.contains("transport") || n.contains("حمل")) return "\uD83D\uDE97";
-        if (n.contains("housing") || n.contains("مسکن")) return "\uD83C\uDFE0";
-        if (n.contains("salary") || n.contains("حقوق")) return "\uD83D\uDCB0";
-        if (n.contains("shop") || n.contains("خرید")) return "\uD83D\uDECD";
-        if (n.contains("health") || n.contains("سلامت")) return "\uD83C\uDFE5";
-        if (n.contains("bill") || n.contains("قبض")) return "\uD83D\uDCC4";
-        if (n.contains("entertain") || n.contains("سرگرمی")) return "\uD83C\uDFAE";
-        return "\uD83D\uDCC1";
-    }
-
     @FXML
     private void add() {
         showEditDialog(null);
     }
 
     private void showEditDialog(Budget existing) {
+        ensureCategories();
+
         Dialog<Budget> dialog = new Dialog<>();
         dialog.setTitle(existing == null ? I18n.t("budget.new") : I18n.t("budget.edit"));
         dialog.setHeaderText(null);
@@ -171,7 +172,6 @@ public class BudgetsController {
         root.setStyle("-fx-padding: 20; -fx-background-color: -fx-bg;");
         root.setPrefWidth(380);
 
-        // Category picker
         Label catLbl = new Label(I18n.t("budget.category"));
         catLbl.getStyleClass().add("form-label");
         ComboBox<Category> catCombo = new ComboBox<>(
@@ -184,11 +184,9 @@ public class BudgetsController {
                     break;
                 }
             }
+            catCombo.setDisable(true);
         }
-        // Disable category change if editing (since UNIQUE constraint on category)
-        if (existing != null) catCombo.setDisable(true);
 
-        // Limit
         Label limitLbl = new Label(I18n.t("budget.limit"));
         limitLbl.getStyleClass().add("form-label");
         TextField limitField = new TextField(existing != null
@@ -199,9 +197,9 @@ public class BudgetsController {
         root.getChildren().addAll(catLbl, catCombo, limitLbl, limitField);
 
         dialog.getDialogPane().setContent(root);
-        if (dialog.getDialogPane().getScene() != null) {
-            ThemeManager.apply(dialog.getDialogPane().getScene());
-        }
+        dialog.getDialogPane().getStylesheets().addAll(
+            getClass().getResource("/css/base.css").toExternalForm(),
+            getClass().getResource("/css/theme-" + io.github.vexisvx.ledgerx.config.AppConfig.getTheme() + ".css").toExternalForm());
 
         dialog.setResultConverter(bt -> {
             if (bt == saveType) {

@@ -40,27 +40,24 @@ public class TransactionFormController {
         typeCombo.setCellFactory(lv -> typeCell());
         typeCombo.setButtonCell(typeCell());
         datePicker.setValue(LocalDate.now());
+        datePicker.setMaxWidth(Double.MAX_VALUE);
 
-        // Strict input filters
+        // ⭐ فیلترها با InputFilter
         InputFilter.amountField(amountField);
         InputFilter.maxLength(titleField, 100);
         InputFilter.maxLength(descArea, 500);
 
-        // Character counter for description
+        // شمارنده کاراکتر توضیحات
         if (lblDescCount != null) {
             descArea.textProperty().addListener((o, a, b) -> {
                 int len = b == null ? 0 : b.length();
                 lblDescCount.setText(len + " / 500");
-                if (len > 450) {
-                    lblDescCount.setStyle("-fx-text-fill: #ff6b6b; -fx-font-size: 10px;");
-                } else {
-                    lblDescCount.setStyle("-fx-text-fill: #6a7a8a; -fx-font-size: 10px;");
-                }
+                lblDescCount.setStyle("-fx-text-fill: " + (len > 450 ? "#ff6b6b" : "#6a7a8a")
+                    + "; -fx-font-size: 10px;");
             });
             lblDescCount.setText("0 / 500");
         }
 
-        // Date restriction: only today or past
         datePicker.setDayCellFactory(picker -> new DateCell() {
             @Override public void updateItem(LocalDate date, boolean empty) {
                 super.updateItem(date, empty);
@@ -120,27 +117,13 @@ public class TransactionFormController {
     @FXML
     private void save() {
         try {
-            clearHighlight(amountField, titleField, descArea);
-
             if (typeCombo.getValue() == null)
                 throw new IllegalArgumentException("Select transaction type");
 
-            BigDecimal amount;
-            try {
-                amount = Validator.parseAmount(amountField.getText());
-                Validator.validateAmount(amount);
-            } catch (IllegalArgumentException e) {
-                highlight(amountField);
-                throw e;
-            }
+            BigDecimal amount = Validator.parseAmount(amountField.getText());
 
             String title = titleField.getText();
-            try {
-                Validator.validateTitle(title);
-            } catch (IllegalArgumentException e) {
-                highlight(titleField);
-                throw e;
-            }
+            Validator.validateTitle(title);
 
             LocalDate date = datePicker.getValue();
             Validator.validateDate(date);
@@ -157,7 +140,7 @@ public class TransactionFormController {
             t.setAmount(amount);
             t.setDate(date);
             t.setTitle(title.trim());
-            t.setDescription(desc != null ? desc.trim() : null);
+            t.setDescription(desc != null && !desc.isBlank() ? desc.trim() : null);
             t.setCategoryId(cat.getId());
 
             if (editing == null) service.create(t);
@@ -170,18 +153,6 @@ public class TransactionFormController {
             Animations.shake(amountField);
         } catch (Exception e) {
             Toast.error(getWindow(), "Error: " + e.getMessage());
-        }
-    }
-
-    private void highlight(javafx.scene.control.Control field) {
-        try {
-            field.setStyle("-fx-border-color: #ff6b6b; -fx-border-width: 2;");
-        } catch (Exception ignored) {}
-    }
-
-    private void clearHighlight(javafx.scene.control.Control... fields) {
-        for (var f : fields) {
-            try { f.setStyle(""); } catch (Exception ignored) {}
         }
     }
 

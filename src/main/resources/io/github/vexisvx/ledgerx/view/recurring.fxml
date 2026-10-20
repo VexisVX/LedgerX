@@ -15,7 +15,7 @@
                     <Label fx:id="lblSubtitle" text="" styleClass="page-subtitle"/>
                 </VBox>
                 <Button fx:id="btnProcess" text="⚡ Process Now" onAction="#processDue" styleClass="btn-secondary"/>
-                <Button fx:id="btnNew" text="+ New Recurring" onAction="#add" styleClass="btn-primary"/>
+                <Button fx:id="btnNew" text="New Recurring" onAction="#add" styleClass="btn-primary"/>
             </HBox>
 
             <!-- Summary tiles -->
@@ -48,12 +48,14 @@
         <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-padding: 14 0 0 0;">
             <StackPane>
                 <VBox fx:id="recListContainer" spacing="6"/>
-                <VBox fx:id="emptyState" styleClass="empty-state" visible="false" managed="false">
-                    <Label text="🔄" styleClass="empty-icon"/>
-                    <Label fx:id="lblEmptyTitle" text="No recurring items" styleClass="empty-title"/>
-                    <Label fx:id="lblEmptyDesc" text="Add rent, salary, subscriptions to auto-record them" styleClass="empty-desc"/>
-                    <Button text="+ New Recurring" onAction="#add" styleClass="btn-primary"/>
-                </VBox>
+                <VBox fx:id="emptyState" styleClass="empty-state-enhanced" visible="false" managed="false">
+                <StackPane styleClass="empty-icon-circle">
+                    <Label text="R" styleClass="empty-icon-enhanced"/>
+                </StackPane>
+                <Label fx:id="lblEmptyTitle" text="No recurring items" styleClass="empty-title-enhanced"/>
+                <Label fx:id="lblEmptyDesc" text="Add rent, salary, subscriptions to auto-record them" styleClass="empty-desc-enhanced"/>
+                <Button text="New Recurring" onAction="#add" styleClass="btn-primary"/>
+            </VBox>
             </StackPane>
         </ScrollPane>
     </center>

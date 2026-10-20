@@ -42,7 +42,7 @@ public class RecurringController {
 
     private void translate() {
         lblTitle.setText(I18n.t("rec.title"));
-        btnNew.setText("+ " + I18n.t("rec.new"));
+        btnNew.setText(I18n.t("rec.new"));
         btnProcess.setText(I18n.t("rec.process"));
         lblMonthlyLabel.setText(I18n.t("rec.monthlyTotal"));
         lblActiveLabel.setText(I18n.t("rec.activeCount"));

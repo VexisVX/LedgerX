@@ -14,7 +14,7 @@
                     <Label fx:id="lblTitle" text="Savings Goals" styleClass="page-header-title"/>
                     <Label fx:id="lblSubtitle" text="" styleClass="page-subtitle"/>
                 </VBox>
-                <Button fx:id="btnNew" text="+ New Goal" onAction="#add" styleClass="btn-primary"/>
+                <Button fx:id="btnNew" text="New Goal" onAction="#add" styleClass="btn-primary"/>
             </HBox>
         </VBox>
     </top>
@@ -22,12 +22,14 @@
         <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-padding: 14 0 0 0;">
             <StackPane>
                 <TilePane fx:id="goalGrid" styleClass="goal-grid" prefColumns="3" hgap="14" vgap="14"/>
-                <VBox fx:id="emptyState" styleClass="empty-state" visible="false" managed="false">
-                    <Label text="🏆" styleClass="empty-icon"/>
-                    <Label fx:id="lblEmptyTitle" text="No goals yet" styleClass="empty-title"/>
-                    <Label fx:id="lblEmptyDesc" text="Create your first savings goal to get started" styleClass="empty-desc"/>
-                    <Button text="+ New Goal" onAction="#add" styleClass="btn-primary"/>
-                </VBox>
+                <VBox fx:id="emptyState" styleClass="empty-state-enhanced" visible="false" managed="false">
+                <StackPane styleClass="empty-icon-circle">
+                    <Label text="G" styleClass="empty-icon-enhanced"/>
+                </StackPane>
+                <Label fx:id="lblEmptyTitle" text="No goals yet" styleClass="empty-title-enhanced"/>
+                <Label fx:id="lblEmptyDesc" text="Create your first savings goal to get started" styleClass="empty-desc-enhanced"/>
+                <Button text="New Goal" onAction="#add" styleClass="btn-primary"/>
+            </VBox>
             </StackPane>
         </ScrollPane>
     </center>

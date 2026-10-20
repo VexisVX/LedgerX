@@ -18,10 +18,6 @@
                 <ComboBox fx:id="themeCombo" prefWidth="180"/>
             </HBox>
             <HBox spacing="16" alignment="CENTER_LEFT">
-                <Label fx:id="lblDisplayMode" text="Display" prefWidth="120"/>
-                <ComboBox fx:id="displayModeCombo" prefWidth="180"/>
-            </HBox>
-            <HBox spacing="16" alignment="CENTER_LEFT">
                 <Label fx:id="lblLanguage" text="Language" prefWidth="120"/>
                 <ComboBox fx:id="langCombo" prefWidth="180"/>
             </HBox>
@@ -32,6 +28,21 @@
             <HBox spacing="16" alignment="CENTER_LEFT">
                 <Label fx:id="lblDateMode" text="Date Format" prefWidth="120"/>
                 <ComboBox fx:id="dateModeCombo" prefWidth="180"/>
+            </HBox>
+            <HBox spacing="16" alignment="CENTER_LEFT">
+                <Label fx:id="lblCompactMode" text="Compact sidebar" prefWidth="120"/>
+                <CheckBox fx:id="compactModeCheck"/>
+            </HBox>
+            <HBox spacing="16" alignment="CENTER_LEFT">
+                <Label fx:id="lblQuickAdd" text="Show + button" prefWidth="120"/>
+                <CheckBox fx:id="quickAddCheck"/>
+            </HBox>
+            <HBox spacing="16" alignment="CENTER_LEFT">
+                <Label fx:id="lblFabPosition" text="+ Button position" prefWidth="120"/>
+                <Slider fx:id="fabOffsetSlider" min="20" max="200" value="85"
+                        showTickLabels="false" showTickMarks="false"
+                        blockIncrement="5" prefWidth="200"/>
+                <Label fx:id="lblFabValue" text="85 px" prefWidth="60"/>
             </HBox>
         </VBox>
 
@@ -54,7 +65,6 @@
             </HBox>
         </VBox>
 
-        <!-- Save -->
         <HBox alignment="CENTER_RIGHT">
             <Button fx:id="btnSave" text="Save" onAction="#save" styleClass="btn-primary"/>
         </HBox>

@@ -17,6 +17,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.*;
@@ -76,6 +77,16 @@ public class LedgerXApp extends Application {
                 I18n.isRtl() ? NodeOrientation.RIGHT_TO_LEFT : NodeOrientation.LEFT_TO_RIGHT);
 
             stage.setTitle("LedgerX - " + I18n.t("app.subtitle"));
+
+            // آیکون
+            try {
+                var iconStream = getClass().getResourceAsStream("/images/logo.png");
+                if (iconStream != null) {
+                    stage.getIcons().add(new Image(iconStream));
+                }
+            } catch (Exception e) {
+                System.err.println("Icon load failed: " + e.getMessage());
+            }
             stage.setScene(scene);
             stage.setMinWidth(1050);
             stage.setMinHeight(700);

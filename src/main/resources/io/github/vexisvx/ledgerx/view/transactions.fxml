@@ -17,7 +17,7 @@
                     <Label fx:id="lblTitle" text="Transactions" styleClass="page-header-title"/>
                     <Label fx:id="lblSubtitle" text="" styleClass="page-subtitle"/>
                 </VBox>
-                <Button fx:id="btnNew" text="+ New Transaction" onAction="#addTransaction" styleClass="btn-primary"/>
+                <Button fx:id="btnNew" text="New Transaction" onAction="#addTransaction" styleClass="btn-primary"/>
             </HBox>
 
             <!-- Summary tiles -->
@@ -87,11 +87,11 @@
             </ScrollPane>
             <VBox fx:id="emptyState" styleClass="empty-state" visible="false" managed="false" spacing="16">
                 <StackPane styleClass="empty-icon-circle">
-                    <Label text="💸" styleClass="empty-icon-enhanced"/>
+                    <Label text="T" styleClass="empty-icon-enhanced"/>
                 </StackPane>
                 <Label fx:id="lblEmptyTitle" text="No transactions yet" styleClass="empty-title-enhanced"/>
                 <Label fx:id="lblEmptyDesc" text="Start tracking your income and expenses by adding your first transaction" styleClass="empty-desc-enhanced"/>
-                <Button text="+ Add Transaction" onAction="#addTransaction" styleClass="empty-action-enhanced"/>
+                <Button text="Add Transaction" onAction="#addTransaction" styleClass="empty-action-enhanced"/>
             </VBox>
         </StackPane>
     </center>

@@ -84,7 +84,7 @@ public class TransactionsController {
         lblExpenseTile.setText(I18n.t("dashboard.expense"));
         lblCountTile.setText(I18n.t("tx.count"));
         searchField.setPromptText(I18n.t("tx.search"));
-        btnNew.setText("+ " + I18n.t("tx.new"));
+        btnNew.setText(I18n.t("tx.new"));
         btnAdvanced.setText("\u2699 " + I18n.t("tx.advanced"));
         lblDateFrom.setText(I18n.t("tx.filter.from"));
         lblDateTo.setText(I18n.t("tx.filter.to"));

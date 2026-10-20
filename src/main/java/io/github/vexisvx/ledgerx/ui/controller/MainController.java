@@ -1,78 +1,119 @@
 package io.github.vexisvx.ledgerx.ui.controller;
 
 import io.github.vexisvx.ledgerx.config.AppConfig;
-import io.github.vexisvx.ledgerx.service.BudgetService;
-import io.github.vexisvx.ledgerx.service.RecurringService;
 import io.github.vexisvx.ledgerx.ui.anim.Animations;
-import io.github.vexisvx.ledgerx.ui.component.Icons;
 import io.github.vexisvx.ledgerx.ui.i18n.I18n;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
 public class MainController {
 
+    @FXML private StackPane stackRoot;
     @FXML private StackPane contentArea;
+    @FXML private VBox sidebar;
+    @FXML private HBox brandBox;
+    @FXML private VBox brandTextBox;
+    @FXML private Label brandTag;
     @FXML private Button btnDashboard, btnTransactions, btnCategories, btnBudgets, btnGoals, btnRecurring, btnSettings, btnAbout;
+    @FXML private Button fabButton;
     @FXML private Label lblBrandFooter;
-    @FXML private Label lblBudgetsBadge;
-    @FXML private Label lblRecurringBadge;
 
     private Button activeBtn;
+    private boolean compact;
 
     @FXML
     public void initialize() {
+        compact = AppConfig.isCompactMode();
         activeBtn = btnDashboard;
-        setNav(btnDashboard, Icons.dashboard(), "nav.dashboard");
-        setNav(btnTransactions, Icons.transactions(), "nav.transactions");
-        setNav(btnCategories, Icons.categories(), "nav.categories");
-        setNav(btnBudgets, Icons.budgets(), "nav.budgets");
-        setNav(btnGoals, Icons.goals(), "nav.goals");
-        setNav(btnRecurring, Icons.recurring(), "nav.recurring");
-        setNav(btnSettings, Icons.settings(), "nav.settings");
-        setNav(btnAbout, Icons.about(), "nav.about");
+        applyCompactLayout();
+        refreshNav();
         if (lblBrandFooter != null) lblBrandFooter.setText("A " + AppConfig.BRAND + " Project");
-
         activeBtn.getStyleClass().add("nav-button-active");
-        refreshBadges();
+
+        setupFab();
+
         Platform.runLater(this::showDashboard);
     }
 
-        private void refreshBadges() {
-        try {
-            int overbudget = new BudgetService().getOverbudgetCount();
-            int due = new RecurringService().getDueCount();
+    private void setupFab() {
+        if (fabButton == null) {
+            System.err.println("!!! FAB is NULL");
+            return;
+        }
 
-            setBadge(lblBudgetsBadge, overbudget, "budget");
-            setBadge(lblRecurringBadge, due, "rec");
-        } catch (Exception ignored) {}
+        boolean show = AppConfig.isShowQuickAdd();
+        System.out.println(">>> FAB setup: show=" + show);
+
+        fabButton.setVisible(show);
+        fabButton.setManaged(show);
+        fabButton.setOpacity(1.0);
+        fabButton.setDisable(false);
+
+        // Position
+        int offset = AppConfig.getFabOffset();
+        StackPane.setMargin(fabButton, new Insets(0, 30, offset, 0));
+        StackPane.setAlignment(fabButton, Pos.BOTTOM_RIGHT);
+
+        // Force CSS
+        Platform.runLater(() -> {
+            fabButton.applyCss();
+            fabButton.layout();
+        });
     }
 
-    private void setBadge(Label badge, int count, String type) {
-        if (badge == null) return;
-        if (count > 0) {
-            badge.setText(count > 99 ? "99+" : String.valueOf(count));
-            badge.setVisible(true);
-            badge.setManaged(true);
-            badge.getStyleClass().removeAll("badge-budget", "badge-rec");
-            badge.getStyleClass().add("budget".equals(type) ? "badge-budget" : "badge-rec");
-        } else {
-            badge.setVisible(false);
-            badge.setManaged(false);
+    private void applyCompactLayout() {
+        if (sidebar == null) return;
+        double width = compact ? 80 : 230;
+        sidebar.setPrefWidth(width);
+        sidebar.setMinWidth(width);
+        sidebar.setMaxWidth(width);
+        if (brandTextBox != null) {
+            brandTextBox.setVisible(!compact);
+            brandTextBox.setManaged(!compact);
+        }
+        if (brandTag != null) {
+            brandTag.setVisible(!compact);
+            brandTag.setManaged(!compact);
+        }
+        if (lblBrandFooter != null) {
+            lblBrandFooter.setVisible(!compact);
+            lblBrandFooter.setManaged(!compact);
         }
     }
 
-    /** Public: called after transactions/budgets/recurring change. */
-    public void onDataChanged() {
-        refreshBadges();
+    private void refreshNav() {
+        setNav(btnDashboard, "D", "nav.dashboard");
+        setNav(btnTransactions, "T", "nav.transactions");
+        setNav(btnCategories, "C", "nav.categories");
+        setNav(btnBudgets, "B", "nav.budgets");
+        setNav(btnGoals, "G", "nav.goals");
+        setNav(btnRecurring, "R", "nav.recurring");
+        setNav(btnSettings, "S", "nav.settings");
+        setNav(btnAbout, "i", "nav.about");
     }
 
-    private void setNav(Button b, String icon, String key) {
-        b.setText(icon + "   " + I18n.t(key));
+    private void setNav(Button b, String code, String key) {
+        if (b == null) return;
+        if (compact) {
+            b.setText(code);
+            b.setAlignment(Pos.CENTER);
+            b.setStyle("-fx-alignment: CENTER; -fx-padding: 11 0; -fx-font-weight: 800; -fx-font-size: 13px;");
+            b.setTooltip(new javafx.scene.control.Tooltip(I18n.t(key)));
+        } else {
+            b.setText(code + "   " + I18n.t(key));
+            b.setAlignment(Pos.CENTER_LEFT);
+            b.setStyle("-fx-alignment: CENTER_LEFT;");
+            b.setTooltip(null);
+        }
     }
 
     private void setActive(Button btn) {
@@ -83,14 +124,57 @@ public class MainController {
         Animations.pulse(btn);
     }
 
-    @FXML private void showDashboard()    { setActive(btnDashboard);    loadView("dashboard.fxml"); }
-    @FXML private void showTransactions() { setActive(btnTransactions); loadView("transactions.fxml"); }
-    @FXML private void showCategories()   { setActive(btnCategories);   loadView("categories.fxml"); }
-    @FXML private void showBudgets()      { setActive(btnBudgets);      loadView("budgets.fxml"); }
-    @FXML private void showGoals()        { setActive(btnGoals);        loadView("goals.fxml"); }
-    @FXML private void showRecurring()    { setActive(btnRecurring);    loadView("recurring.fxml"); }
-    @FXML private void showSettings()     { setActive(btnSettings);     loadView("settings.fxml"); }
-    @FXML private void showAbout()        { setActive(btnAbout);        loadView("about.fxml"); }
+    @FXML public void showDashboard()    { setActive(btnDashboard);    loadView("dashboard.fxml"); }
+    @FXML public void showTransactions() { setActive(btnTransactions); loadView("transactions.fxml"); }
+    @FXML public void showCategories()   { setActive(btnCategories);   loadView("categories.fxml"); }
+    @FXML public void showBudgets()      { setActive(btnBudgets);      loadView("budgets.fxml"); }
+    @FXML public void showGoals()        { setActive(btnGoals);        loadView("goals.fxml"); }
+    @FXML public void showRecurring()    { setActive(btnRecurring);    loadView("recurring.fxml"); }
+    @FXML public void showSettings()     { setActive(btnSettings);     loadView("settings.fxml"); }
+    @FXML public void showAbout()        { setActive(btnAbout);        loadView("about.fxml"); }
+
+    @FXML
+    public void quickAdd() {
+        try {
+            java.net.URL formUrl = getClass().getResource("/io/github/vexisvx/ledgerx/view/transaction-form.fxml");
+            if (formUrl == null) {
+                showError("transaction-form.fxml not found");
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(formUrl);
+            loader.setResources(I18n.getBundle());
+            javafx.scene.Scene scene = new javafx.scene.Scene(loader.load());
+
+            java.net.URL baseCss = getClass().getResource("/css/base.css");
+            java.net.URL themeCss = getClass().getResource("/css/theme-" + AppConfig.getTheme() + ".css");
+            if (baseCss != null) scene.getStylesheets().add(baseCss.toExternalForm());
+            if (themeCss != null) scene.getStylesheets().add(themeCss.toExternalForm());
+
+            TransactionFormController ctrl = loader.getController();
+            ctrl.setTransaction(null);
+
+            javafx.stage.Stage st = new javafx.stage.Stage();
+            st.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            st.setTitle(I18n.t("form.title.new"));
+            st.setScene(scene);
+            st.showAndWait();
+
+            if (activeBtn == btnDashboard) loadView("dashboard.fxml");
+            else if (activeBtn == btnTransactions) loadView("transactions.fxml");
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Error: " + e.getMessage());
+        }
+    }
+
+    private void showError(String msg) {
+        javafx.scene.control.Alert a = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+        a.setTitle("Error");
+        a.setHeaderText(null);
+        a.setContentText(msg);
+        a.showAndWait();
+    }
 
     private void loadView(String name) {
         try {
@@ -98,15 +182,21 @@ public class MainController {
                 getClass().getResource("/io/github/vexisvx/ledgerx/view/" + name));
             loader.setResources(I18n.getBundle());
             Node view = loader.load();
+            Object ctrl = loader.getController();
+            if (ctrl instanceof DashboardController dc) dc.setMainController(this);
+
+            // ONLY contentArea children changed, FAB stays in stackRoot
             contentArea.getChildren().setAll(view);
             Animations.slideUpFade(view, 320);
-            if (I18n.isRtl() && !view.getStyleClass().contains("rtl"))
-                view.getStyleClass().add("rtl");
+
+            // Ensure FAB is still visible & on top
+            if (fabButton != null) {
+                fabButton.toFront();
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            Label err = new Label("Error loading " + name + ": " + e.getMessage());
+            Label err = new Label("Error: " + e.getMessage());
             err.setStyle("-fx-text-fill: #ff6b6b; -fx-padding: 20;");
-            err.setWrapText(true);
             contentArea.getChildren().setAll(err);
         }
     }

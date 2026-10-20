@@ -7,14 +7,14 @@
             fx:controller="io.github.vexisvx.ledgerx.ui.controller.MainController"
             prefWidth="1280" prefHeight="800">
     <left>
-        <VBox styleClass="sidebar" spacing="4" prefWidth="230">
-            <HBox styleClass="brand-box" spacing="12" alignment="CENTER_LEFT">
-                <StackPane styleClass="brand-logo" prefWidth="42" prefHeight="42" maxWidth="42" maxHeight="42">
-                    <Label text="LX" styleClass="brand-logo-label"/>
+        <VBox fx:id="sidebar" styleClass="sidebar" spacing="4" prefWidth="230">
+            <HBox fx:id="brandBox" styleClass="brand-box" spacing="12" alignment="CENTER_LEFT">
+                <StackPane fx:id="brandLogo" styleClass="brand-logo" prefWidth="42" prefHeight="42" maxWidth="42" maxHeight="42">
+                    <Label fx:id="brandLogoLabel" text="LX" styleClass="brand-logo-label"/>
                 </StackPane>
-                <VBox spacing="0">
+                <VBox fx:id="brandTextBox" spacing="0">
                     <Label text="LedgerX" styleClass="brand-name"/>
-                    <Label text="Finance Manager" styleClass="brand-tag"/>
+                    <Label fx:id="brandTag" text="Finance Manager" styleClass="brand-tag"/>
                 </VBox>
             </HBox>
 
@@ -23,15 +23,9 @@
             <Button fx:id="btnDashboard" onAction="#showDashboard" styleClass="nav-button" maxWidth="Infinity"/>
             <Button fx:id="btnTransactions" onAction="#showTransactions" styleClass="nav-button" maxWidth="Infinity"/>
             <Button fx:id="btnCategories" onAction="#showCategories" styleClass="nav-button" maxWidth="Infinity"/>
-            <HBox alignment="CENTER_LEFT" spacing="6" maxWidth="Infinity">
-                <Button fx:id="btnBudgets" onAction="#showBudgets" styleClass="nav-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-                <Label fx:id="lblBudgetsBadge" text="0" styleClass="nav-badge badge-budget" visible="false" managed="false"/>
-            </HBox>
+            <Button fx:id="btnBudgets" onAction="#showBudgets" styleClass="nav-button" maxWidth="Infinity"/>
             <Button fx:id="btnGoals" onAction="#showGoals" styleClass="nav-button" maxWidth="Infinity"/>
-            <HBox alignment="CENTER_LEFT" spacing="6" maxWidth="Infinity">
-                <Button fx:id="btnRecurring" onAction="#showRecurring" styleClass="nav-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-                <Label fx:id="lblRecurringBadge" text="0" styleClass="nav-badge badge-rec" visible="false" managed="false"/>
-            </HBox>
+            <Button fx:id="btnRecurring" onAction="#showRecurring" styleClass="nav-button" maxWidth="Infinity"/>
             <Button fx:id="btnSettings" onAction="#showSettings" styleClass="nav-button" maxWidth="Infinity"/>
             <Button fx:id="btnAbout" onAction="#showAbout" styleClass="nav-button" maxWidth="Infinity"/>
 
@@ -44,6 +38,10 @@
         </VBox>
     </left>
     <center>
-        <StackPane fx:id="contentArea" styleClass="content-area"/>
+        <StackPane fx:id="stackRoot">
+            <StackPane fx:id="contentArea" styleClass="content-area"/>
+            <Button fx:id="fabButton" text="+" styleClass="fab" onAction="#quickAdd"
+                    StackPane.alignment="BOTTOM_RIGHT"/>
+        </StackPane>
     </center>
 </BorderPane>

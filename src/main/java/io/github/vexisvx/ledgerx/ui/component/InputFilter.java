@@ -2,68 +2,51 @@ package io.github.vexisvx.ledgerx.ui.component;
 
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 
 public class InputFilter {
 
-    /**
-     * Allow only digits + one dot + max 2 decimals.
-     * Uses textProperty listener (works with setText() too).
-     */
+    /** فقط ۱۲ رقم صحیح + ۲ اعشار — TextFormatter */
     public static void amountField(TextField field) {
-        field.textProperty().addListener((obs, oldV, newV) -> {
-            if (newV == null) return;
-            // allow empty
-            if (newV.isEmpty()) return;
-            // valid pattern: digits, optionally one dot and 1-2 decimals
-            if (!newV.matches("\\d{0,12}(\\.\\d{0,2})?")) {
-                // Reject: restore old value, or trim invalid chars
-                String cleaned = newV.replaceAll("[^0-9.]", "");
-                int dot = cleaned.indexOf('.');
-                if (dot >= 0) {
-                    // keep only first dot, max 2 decimals
-                    String before = cleaned.substring(0, dot);
-                    String after = cleaned.substring(dot + 1).replace(".", "");
-                    if (after.length() > 2) after = after.substring(0, 2);
-                    cleaned = before + "." + after;
-                }
-                if (cleaned.length() > 12) cleaned = cleaned.substring(0, 12);
-                field.setText(cleaned);
+        field.setTextFormatter(new TextFormatter<>(change -> {
+            String newText = change.getControlNewText();
+            if (newText.isEmpty()) return change;
+            // max 12 digits + optional .XX (max 2 decimals)
+            if (newText.matches("\\d{0,12}(\\.\\d{0,2})?")) {
+                return change;
             }
-        });
+            return null; // reject whole change
+        }));
     }
 
     public static void maxLength(TextField field, int max) {
-        field.textProperty().addListener((obs, oldV, newV) -> {
-            if (newV != null && newV.length() > max) {
-                field.setText(newV.substring(0, max));
-            }
-        });
+        field.setTextFormatter(new TextFormatter<>(change -> {
+            if (change.getControlNewText().length() <= max) return change;
+            return null;
+        }));
     }
 
     public static void maxLength(TextArea area, int max) {
-        area.textProperty().addListener((obs, oldV, newV) -> {
-            if (newV != null && newV.length() > max) {
-                area.setText(newV.substring(0, max));
-            }
-        });
+        area.setTextFormatter(new TextFormatter<>(change -> {
+            if (change.getControlNewText().length() <= max) return change;
+            return null;
+        }));
+    }
+
+    public static void digitsOnly(TextField field, int max) {
+        field.setTextFormatter(new TextFormatter<>(change -> {
+            String newText = change.getControlNewText();
+            if (newText.isEmpty()) return change;
+            if (newText.matches("\\d{0," + max + "}")) return change;
+            return null;
+        }));
     }
 
     public static void pin(TextField field) {
-        field.textProperty().addListener((obs, oldV, newV) -> {
-            if (newV != null && !newV.matches("\\d{0,4}")) {
-                field.setText(newV.replaceAll("[^0-9]", ""));
-                if (field.getText().length() > 4) {
-                    field.setText(field.getText().substring(0, 4));
-                }
-            }
-        });
+        digitsOnly(field, 4);
     }
 
     public static void intField(TextField field, int maxDigits) {
-        field.textProperty().addListener((obs, oldV, newV) -> {
-            if (newV != null && !newV.matches("\\d{0," + maxDigits + "}")) {
-                field.setText(newV.replaceAll("[^0-9]", ""));
-            }
-        });
+        digitsOnly(field, maxDigits);
     }
 }

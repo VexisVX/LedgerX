@@ -13,7 +13,6 @@ public class AppConfig {
     public static final String GITHUB = "https://github.com/VexisVX";
     public static final String REPO = "https://github.com/VexisVX/LedgerX";
 
-    // DEFAULTS: English, USD, Teal, Gregorian
     public static String getLanguage() { return prefs.get("lang", "en"); }
     public static void setLanguage(String v) { prefs.put("lang", v); }
 
@@ -26,12 +25,16 @@ public class AppConfig {
     public static String getDateMode() { return prefs.get("dateMode", "gregorian"); }
     public static void setDateMode(String v) { prefs.put("dateMode", v); }
 
-    // display mode: "text" (default on Linux) or "icon"
-    public static String getDisplayMode() { return prefs.get("displayMode", "text"); }
-    public static void setDisplayMode(String v) { prefs.put("displayMode", v); }
+    public static boolean isCompactMode() { return "true".equals(prefs.get("compactMode", "false")); }
+    public static void setCompactMode(boolean v) { prefs.put("compactMode", String.valueOf(v)); }
+
+    public static boolean isShowQuickAdd() { return "true".equals(prefs.get("showQuickAdd", "true")); }
+    public static void setShowQuickAdd(boolean v) { prefs.put("showQuickAdd", String.valueOf(v)); }
+
+    public static int getFabOffset() { return prefs.getInt("fabOffset", 100); }
+    public static void setFabOffset(int v) { prefs.putInt("fabOffset", v); }
 
     public static String getPin() { return prefs.get("pin", ""); }
     public static void setPin(String v) { prefs.put("pin", v); }
-
     public static boolean isPinEnabled() { return !getPin().isEmpty(); }
 }

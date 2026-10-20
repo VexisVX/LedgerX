@@ -6,92 +6,80 @@
 <ScrollPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="io.github.vexisvx.ledgerx.ui.controller.DashboardController"
-            fitToWidth="true"
-            style="-fx-background-color: -fx-bg;">
+            fitToWidth="true" style="-fx-background-color: -fx-bg;">
     <VBox styleClass="dash-root">
 
-        <!-- Header -->
         <HBox styleClass="dash-header">
             <VBox spacing="2" HBox.hgrow="ALWAYS">
-                <Label fx:id="lblGreeting" text="👋 Welcome back" styleClass="dash-greeting"/>
+                <Label fx:id="lblGreeting" text="Welcome back" styleClass="dash-greeting"/>
                 <Label fx:id="lblDate" text="" styleClass="dash-date"/>
             </VBox>
             <HBox styleClass="dash-controls">
+                <Button fx:id="btnPrevMonth" text="◄" onAction="#previousMonth" styleClass="btn-icon"/>
+                <Label fx:id="lblMonthLabel" text="" style="-fx-font-weight: 800; -fx-text-fill: -fx-text-strong; -fx-min-width: 150; -fx-alignment: CENTER;"/>
+                <Button fx:id="btnNextMonth" text="►" onAction="#nextMonth" styleClass="btn-icon"/>
                 <CheckBox fx:id="autoRefreshCheck" text="Auto 30s" styleClass="dash-checkbox"/>
-                <Button fx:id="btnRefresh" text="🔄 Refresh" styleClass="dash-refresh-btn" onAction="#refreshAll"/>
+                <Button fx:id="btnRefresh" text="Refresh" styleClass="dash-refresh-btn" onAction="#refreshAll"/>
             </HBox>
         </HBox>
 
-        <!-- 4 Summary cards -->
         <HBox styleClass="dash-summary-row">
             <VBox styleClass="dash-card" HBox.hgrow="ALWAYS">
-                <Label text="⬆" styleClass="dash-card-icon"/>
                 <Label fx:id="lblIncomeLabel" text="Income" styleClass="dash-card-label"/>
                 <Label fx:id="lblIncomeValue" text="0" styleClass="dash-card-value income"/>
-                <Label fx:id="lblIncomeSub" text="this month" styleClass="dash-card-sub"/>
             </VBox>
             <VBox styleClass="dash-card" HBox.hgrow="ALWAYS">
-                <Label text="⬇" styleClass="dash-card-icon"/>
                 <Label fx:id="lblExpenseLabel" text="Expenses" styleClass="dash-card-label"/>
                 <Label fx:id="lblExpenseValue" text="0" styleClass="dash-card-value expense"/>
-                <Label fx:id="lblExpenseSub" text="this month" styleClass="dash-card-sub"/>
             </VBox>
             <VBox styleClass="dash-card" HBox.hgrow="ALWAYS">
-                <Label text="💎" styleClass="dash-card-icon"/>
                 <Label fx:id="lblNetLabel" text="Net" styleClass="dash-card-label"/>
                 <Label fx:id="lblNetValue" text="0" styleClass="dash-card-value net"/>
-                <Label fx:id="lblNetSub" text="this month" styleClass="dash-card-sub"/>
-            </VBox>
-            <VBox styleClass="dash-card" HBox.hgrow="ALWAYS">
-                <Label text="💰" styleClass="dash-card-icon"/>
-                <Label fx:id="lblRemainingLabel" text="Remaining" styleClass="dash-card-label"/>
-                <Label fx:id="lblRemainingValue" text="0" styleClass="dash-card-value remain"/>
-                <Label fx:id="lblRemainingSub" text="to spend" styleClass="dash-card-sub"/>
             </VBox>
         </HBox>
 
-        <!-- Row 1.5: Quick Stats (Stage 3) -->
-        <VBox styleClass="dash-panel" spacing="10">
-            <Label fx:id="lblQuickTitle" text="This Month at a Glance" styleClass="dash-panel-title"/>
-            <HBox spacing="16">
-                <VBox styleClass="quick-stat-cell" HBox.hgrow="ALWAYS" spacing="2">
-                    <Label fx:id="lblDailyLabel" text="Daily Avg" styleClass="dash-card-label"/>
-                    <Label fx:id="lblDailyValue" text="0" styleClass="quick-stat-value"/>
-                    <Label fx:id="lblDailyCompare" text="" styleClass="dash-card-sub"/>
-                </VBox>
-                <VBox styleClass="quick-stat-cell" HBox.hgrow="ALWAYS" spacing="2">
-                    <Label fx:id="lblDaysLeftLabel" text="Days Left" styleClass="dash-card-label"/>
-                    <Label fx:id="lblDaysLeftValue" text="0" styleClass="quick-stat-value"/>
-                    <Label fx:id="lblDaysLeftSub" text="of 31 days" styleClass="dash-card-sub"/>
-                </VBox>
-                <VBox styleClass="quick-stat-cell" HBox.hgrow="ALWAYS" spacing="2">
-                    <Label fx:id="lblProjectedLabel" text="Projected" styleClass="dash-card-label"/>
-                    <Label fx:id="lblProjectedValue" text="0" styleClass="quick-stat-value"/>
-                    <Label fx:id="lblProjectedSub" text="" styleClass="dash-card-sub"/>
-                </VBox>
-            </HBox>
-            <Label fx:id="lblQuickEmpty" text="" styleClass="dash-empty" visible="false" managed="false"/>
-        </VBox>
-
-        <!-- Charts row -->
         <HBox styleClass="dash-two-col">
             <VBox styleClass="dash-panel" HBox.hgrow="ALWAYS" minWidth="400">
-                <Label fx:id="lblTrendTitle" text="Income vs Expenses" styleClass="dash-panel-title"/>
-                <BarChart fx:id="chartTrend" prefHeight="260" VBox.vgrow="ALWAYS" styleClass="dash-chart">
-                    <xAxis><CategoryAxis/></xAxis>
-                    <yAxis><NumberAxis/></yAxis>
-                </BarChart>
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label fx:id="lblTrendTitle" text="Income vs Expenses" styleClass="dash-panel-title"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <ToggleButton fx:id="btnBarMode" text="Bar" onAction="#setBarMode" selected="true"/>
+                    <ToggleButton fx:id="btnLineMode" text="Line" onAction="#setLineMode"/>
+                </HBox>
+                <StackPane fx:id="chartTrendContainer" prefHeight="260"/>
             </VBox>
             <VBox styleClass="dash-panel" HBox.hgrow="ALWAYS" minWidth="400">
                 <Label fx:id="lblCategoryTitle" text="Spending by Category" styleClass="dash-panel-title"/>
                 <HBox spacing="12" VBox.vgrow="ALWAYS">
-                    <PieChart fx:id="chartCategory" prefHeight="260" HBox.hgrow="ALWAYS" styleClass="dash-chart"/>
+                    <PieChart fx:id="chartCategory" prefHeight="260" HBox.hgrow="ALWAYS"/>
                     <VBox fx:id="categoryLegend" spacing="6" prefWidth="160" alignment="CENTER_LEFT"/>
                 </HBox>
             </VBox>
         </HBox>
 
-        <!-- Recent tx + Budgets -->
+        <!-- Forecast Alerts -->
+        <VBox fx:id="forecastPanel" styleClass="forecast-panel">
+            <Label fx:id="lblForecastTitle" text="Budget Forecast Alerts" styleClass="dash-panel-title"/>
+            <VBox fx:id="forecastBox" spacing="8"/>
+            <Label fx:id="lblForecastEmpty" text="All budgets on track" styleClass="dash-empty"/>
+        </VBox>
+
+        <!-- Timeline -->
+        <VBox styleClass="timeline-panel">
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <Label fx:id="lblTimelineTitle" text="Balance Timeline" styleClass="dash-panel-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <ComboBox fx:id="timelineRangeCombo" prefWidth="140"/>
+            </HBox>
+            <VBox fx:id="timelineBox" spacing="2"/>
+            <Label fx:id="lblTimelineEmpty" text="No transactions in this period" styleClass="dash-empty"/>
+            <HBox fx:id="timelineSummary" styleClass="timeline-summary" visible="false" managed="false">
+                <Label fx:id="lblTimelineStart" text="" styleClass="dash-progress-label"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="lblTimelineNet" text="" styleClass="timeline-net-change"/>
+            </HBox>
+        </VBox>
+
         <HBox styleClass="dash-two-col">
             <VBox styleClass="dash-panel" HBox.hgrow="ALWAYS">
                 <HBox styleClass="dash-panel-header">
@@ -100,26 +88,25 @@
                     <Label fx:id="lblViewAll" text="View all →" styleClass="dash-panel-link" onMouseClicked="#goToTransactions"/>
                 </HBox>
                 <VBox fx:id="recentTxBox" spacing="2"/>
-                <Label fx:id="lblNoTx" text="No transactions yet" styleClass="dash-empty, empty-desc-enhanced"/>
+                <Label fx:id="lblNoTx" text="No transactions yet" styleClass="dash-empty"/>
             </VBox>
             <VBox styleClass="dash-panel" HBox.hgrow="ALWAYS">
                 <Label fx:id="lblBudgetTitle" text="Budget Progress" styleClass="dash-panel-title"/>
                 <VBox fx:id="budgetBox" spacing="4"/>
-                <Label fx:id="lblNoBudget" text="No budgets set" styleClass="dash-empty, empty-desc-enhanced"/>
+                <Label fx:id="lblNoBudget" text="No budgets set" styleClass="dash-empty"/>
             </VBox>
         </HBox>
 
-        <!-- Goals + Insights -->
         <HBox styleClass="dash-two-col">
             <VBox styleClass="dash-panel" HBox.hgrow="ALWAYS">
                 <Label fx:id="lblGoalsTitle" text="Savings Goals" styleClass="dash-panel-title"/>
                 <VBox fx:id="goalsBox" spacing="4"/>
-                <Label fx:id="lblNoGoals" text="No goals yet" styleClass="dash-empty, empty-desc-enhanced"/>
+                <Label fx:id="lblNoGoals" text="No goals yet" styleClass="dash-empty"/>
             </VBox>
             <VBox styleClass="dash-panel" HBox.hgrow="ALWAYS">
                 <Label fx:id="lblInsightsTitle" text="Insights" styleClass="dash-panel-title"/>
                 <VBox fx:id="insightsBox" spacing="6"/>
-                <Label fx:id="lblNoInsights" text="Add more transactions to see insights" styleClass="dash-empty, empty-desc-enhanced"/>
+                <Label fx:id="lblNoInsights" text="Add more data to see insights" styleClass="dash-empty"/>
             </VBox>
         </HBox>
 

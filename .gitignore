@@ -1,4 +1,4 @@
-# Build output
+# Build
 target/
 build/
 out/
@@ -38,13 +38,10 @@ mvnw.cmd
 *.tmp
 *.bak
 
-# Scripts (temporary)
-*.sh
-
-# Exports (test)
-*.pdf
-*.csv
-*.xlsx
-
-# But keep source files
-!src/**/*.sh
+# JavaFX jmods / app-image
+javafx-jmods-*
+javafx-jmods.zip
+javafx-libs/
+pkg-input/
+wine-*/
+windows-jdk/

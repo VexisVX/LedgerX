@@ -37,7 +37,7 @@ public class GoalsController {
 
     private void translate() {
         lblTitle.setText(I18n.t("goal.title"));
-        btnNew.setText("+ " + I18n.t("goal.new"));
+        btnNew.setText(I18n.t("goal.new"));
         lblEmptyTitle.setText(I18n.t("goal.empty.title"));
         lblEmptyDesc.setText(I18n.t("goal.empty.desc"));
     }
