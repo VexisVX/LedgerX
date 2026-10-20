@@ -1,12 +1,50 @@
+# Build output
 target/
+build/
+out/
+*.class
+
+# Database
 *.db
 *.db-journal
 *.db-wal
 *.db-shm
 ledgerx.db
+
+# IDE
 .idea/
 .vscode/
 *.iml
-*.log
-*.bak
+*.ipr
+*.iws
+.settings/
+.project
+.classpath
+
+# OS
 .DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Maven
+.mvn/
+mvnw
+mvnw.cmd
+
+# Temp
+*.tmp
+*.bak
+
+# Scripts (temporary)
+*.sh
+
+# Exports (test)
+*.pdf
+*.csv
+*.xlsx
+
+# But keep source files
+!src/**/*.sh
