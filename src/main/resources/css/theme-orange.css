@@ -1,0 +1,40 @@
+.root {
+    -fx-bg: #100e0c;
+    -fx-bg-sidebar: #14110e;
+    -fx-card: #1c1815;
+    -fx-card-alt: #221d19;
+    -fx-input-bg: #2a231e;
+    -fx-border: #3a2f28;
+    -fx-hover: #2e2620;
+    -fx-text-strong: #fff7f0;
+    -fx-text-main: #ece0d5;
+    -fx-text-sub: #c0a898;
+    -fx-text-muted: #8a7565;
+    -fx-text-faint: #5a4838;
+    -fx-accent: #ff8c42;
+    -fx-accent2: #ffb84d;
+    -fx-accent-soft: rgba(255,140,66,0.14);
+    -fx-accent-border: rgba(255,140,66,0.55);
+    -fx-accent-glow: rgba(255,140,66,0.45);
+    -fx-income: #00c896;
+    -fx-expense: #ff5050;
+    -fx-expense-soft: rgba(255,80,80,0.10);
+    -fx-expense-soft2: rgba(255,80,80,0.22);
+    -fx-expense-border: rgba(255,80,80,0.5);
+    -fx-base: #100e0c;
+    -fx-background: #100e0c;
+    -fx-control-inner-background: #2a231e;
+
+    /* stage 4 theme vars */
+    -fx-income-soft: rgba(0,200,150,0.10);
+    -fx-income-border: rgba(0,200,150,0.25);
+    -fx-expense-soft: rgba(255,80,80,0.10);
+    -fx-expense-border: rgba(255,80,80,0.25);
+    -fx-remain-soft: rgba(255,140,66,0.10);
+    -fx-remain-border: rgba(255,140,66,0.25);
+    -fx-warning: #f5a623;
+    -fx-warning-dark: #e08e0b;
+    -fx-expense-dark: #d93030;
+    -fx-shadow: rgba(0,0,0,0.4);
+    -fx-chart-grid: rgba(140,120,100,0.15);
+}

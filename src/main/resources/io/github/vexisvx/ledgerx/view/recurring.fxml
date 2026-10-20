@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="io.github.vexisvx.ledgerx.ui.controller.RecurringController"
+            styleClass="content-area">
+    <top>
+        <VBox spacing="14">
+            <HBox styleClass="page-header" alignment="CENTER_LEFT" spacing="12">
+                <Label text="🔄" styleClass="page-header-icon"/>
+                <VBox spacing="0" HBox.hgrow="ALWAYS">
+                    <Label fx:id="lblTitle" text="Recurring" styleClass="page-header-title"/>
+                    <Label fx:id="lblSubtitle" text="" styleClass="page-subtitle"/>
+                </VBox>
+                <Button fx:id="btnProcess" text="⚡ Process Now" onAction="#processDue" styleClass="btn-secondary"/>
+                <Button fx:id="btnNew" text="+ New Recurring" onAction="#add" styleClass="btn-primary"/>
+            </HBox>
+
+            <!-- Summary tiles -->
+            <HBox styleClass="rec-summary-row">
+                <HBox styleClass="summary-tile" HBox.hgrow="ALWAYS">
+                    <Label text="📅" styleClass="summary-tile-icon"/>
+                    <VBox spacing="2">
+                        <Label fx:id="lblMonthlyLabel" text="Monthly total" styleClass="summary-tile-label"/>
+                        <Label fx:id="lblMonthlyTotal" text="0" styleClass="summary-tile-value"/>
+                    </VBox>
+                </HBox>
+                <HBox styleClass="summary-tile" HBox.hgrow="ALWAYS">
+                    <Label text="🔢" styleClass="summary-tile-icon"/>
+                    <VBox spacing="2">
+                        <Label fx:id="lblActiveLabel" text="Active items" styleClass="summary-tile-label"/>
+                        <Label fx:id="lblActiveCount" text="0" styleClass="summary-tile-value"/>
+                    </VBox>
+                </HBox>
+                <HBox styleClass="summary-tile" HBox.hgrow="ALWAYS">
+                    <Label text="⏰" styleClass="summary-tile-icon"/>
+                    <VBox spacing="2">
+                        <Label fx:id="lblNextLabel" text="Next payment" styleClass="summary-tile-label"/>
+                        <Label fx:id="lblNextDate" text="-" styleClass="summary-tile-value"/>
+                    </VBox>
+                </HBox>
+            </HBox>
+        </VBox>
+    </top>
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-padding: 14 0 0 0;">
+            <StackPane>
+                <VBox fx:id="recListContainer" spacing="6"/>
+                <VBox fx:id="emptyState" styleClass="empty-state" visible="false" managed="false">
+                    <Label text="🔄" styleClass="empty-icon"/>
+                    <Label fx:id="lblEmptyTitle" text="No recurring items" styleClass="empty-title"/>
+                    <Label fx:id="lblEmptyDesc" text="Add rent, salary, subscriptions to auto-record them" styleClass="empty-desc"/>
+                    <Button text="+ New Recurring" onAction="#add" styleClass="btn-primary"/>
+                </VBox>
+            </StackPane>
+        </ScrollPane>
+    </center>
+</BorderPane>

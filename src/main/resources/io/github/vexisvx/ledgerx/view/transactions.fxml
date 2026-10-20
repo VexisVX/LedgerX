@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.ScrollPane?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="io.github.vexisvx.ledgerx.ui.controller.TransactionsController"
+            style="-fx-background-color: -fx-bg;"
+            styleClass="content-area">
+    <top>
+        <VBox spacing="14">
+            <!-- Page header -->
+            <HBox styleClass="page-header" alignment="CENTER_LEFT" spacing="12">
+                <Label fx:id="lblHeaderIcon" text="💳" styleClass="page-header-icon"/>
+                <VBox spacing="0" HBox.hgrow="ALWAYS">
+                    <Label fx:id="lblTitle" text="Transactions" styleClass="page-header-title"/>
+                    <Label fx:id="lblSubtitle" text="" styleClass="page-subtitle"/>
+                </VBox>
+                <Button fx:id="btnNew" text="+ New Transaction" onAction="#addTransaction" styleClass="btn-primary"/>
+            </HBox>
+
+            <!-- Summary tiles -->
+            <HBox styleClass="summary-strip">
+                <HBox styleClass="summary-tile" HBox.hgrow="ALWAYS">
+                    <Label text="⬆" styleClass="summary-tile-icon"/>
+                    <VBox spacing="2">
+                        <Label fx:id="lblIncomeTile" text="Income" styleClass="summary-tile-label"/>
+                        <Label fx:id="lblIncomeValue" text="0" styleClass="summary-tile-value income"/>
+                    </VBox>
+                </HBox>
+                <HBox styleClass="summary-tile" HBox.hgrow="ALWAYS">
+                    <Label text="⬇" styleClass="summary-tile-icon"/>
+                    <VBox spacing="2">
+                        <Label fx:id="lblExpenseTile" text="Expense" styleClass="summary-tile-label"/>
+                        <Label fx:id="lblExpenseValue" text="0" styleClass="summary-tile-value expense"/>
+                    </VBox>
+                </HBox>
+                <HBox styleClass="summary-tile" HBox.hgrow="ALWAYS">
+                    <Label text="📊" styleClass="summary-tile-icon"/>
+                    <VBox spacing="2">
+                        <Label fx:id="lblCountTile" text="Showing" styleClass="summary-tile-label"/>
+                        <Label fx:id="lblCountValue" text="0" styleClass="summary-tile-value"/>
+                    </VBox>
+                </HBox>
+            </HBox>
+
+            <!-- Filter toolbar -->
+            <VBox spacing="8">
+                <HBox styleClass="toolbar-strip">
+                    <TextField fx:id="searchField" styleClass="toolbar-search" promptText="Search..."/>
+                    <ComboBox fx:id="typeFilter" styleClass="toolbar-combo"/>
+                    <ComboBox fx:id="categoryFilter" styleClass="toolbar-combo"/>
+                    <ToggleButton fx:id="btnAdvanced" text="⚙ Filters"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <MenuButton fx:id="btnExport" text="Export" styleClass="btn-secondary">
+                        <items>
+                            <MenuItem fx:id="miCsv" text="CSV" onAction="#exportCsv"/>
+                            <MenuItem fx:id="miExcel" text="Excel" onAction="#exportExcel"/>
+                            <MenuItem fx:id="miPdf" text="PDF" onAction="#exportPdf"/>
+                        </items>
+                    </MenuButton>
+                </HBox>
+
+                <!-- Advanced filters (hidden by default) -->
+                <HBox fx:id="advancedPanel" styleClass="toolbar-strip" visible="false" managed="false">
+                    <Label fx:id="lblDateFrom" text="From"/>
+                    <DatePicker fx:id="dateFromPicker" prefWidth="130"/>
+                    <Label fx:id="lblDateTo" text="To"/>
+                    <DatePicker fx:id="dateToPicker" prefWidth="130"/>
+                    <Label fx:id="lblMinAmount" text="Min"/>
+                    <TextField fx:id="minAmountField" promptText="0" prefWidth="90"/>
+                    <Label fx:id="lblMaxAmount" text="Max"/>
+                    <TextField fx:id="maxAmountField" promptText="∞" prefWidth="90"/>
+                    <Label fx:id="lblSort" text="Sort"/>
+                    <ComboBox fx:id="sortCombo" prefWidth="150"/>
+                    <Button fx:id="btnClearFilters" text="Clear" onAction="#clearFilters" styleClass="btn-secondary"/>
+                </HBox>
+            </VBox>
+        </VBox>
+    </top>
+
+    <center>
+        <StackPane>
+            <ScrollPane fx:id="txScroll" fitToWidth="true" style="-fx-background-color: transparent; -fx-padding: 14 0 0 0;">
+                <VBox fx:id="txListContainer" styleClass="tx-list-container"/>
+            </ScrollPane>
+            <VBox fx:id="emptyState" styleClass="empty-state" visible="false" managed="false" spacing="16">
+                <StackPane styleClass="empty-icon-circle">
+                    <Label text="💸" styleClass="empty-icon-enhanced"/>
+                </StackPane>
+                <Label fx:id="lblEmptyTitle" text="No transactions yet" styleClass="empty-title-enhanced"/>
+                <Label fx:id="lblEmptyDesc" text="Start tracking your income and expenses by adding your first transaction" styleClass="empty-desc-enhanced"/>
+                <Button text="+ Add Transaction" onAction="#addTransaction" styleClass="empty-action-enhanced"/>
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane>

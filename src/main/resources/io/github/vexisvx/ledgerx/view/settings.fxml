@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="io.github.vexisvx.ledgerx.ui.controller.SettingsController"
+            fitToWidth="true" style="-fx-background-color: transparent;">
+    <VBox spacing="16">
+        <Label fx:id="lblTitle" text="Settings" styleClass="page-title"/>
+
+        <!-- Appearance -->
+        <VBox styleClass="settings-section" spacing="12">
+            <Label fx:id="lblAppearance" text="Appearance" styleClass="settings-section-title"/>
+            <HBox spacing="16" alignment="CENTER_LEFT">
+                <Label fx:id="lblTheme" text="Theme" prefWidth="120"/>
+                <ComboBox fx:id="themeCombo" prefWidth="180"/>
+            </HBox>
+            <HBox spacing="16" alignment="CENTER_LEFT">
+                <Label fx:id="lblDisplayMode" text="Display" prefWidth="120"/>
+                <ComboBox fx:id="displayModeCombo" prefWidth="180"/>
+            </HBox>
+            <HBox spacing="16" alignment="CENTER_LEFT">
+                <Label fx:id="lblLanguage" text="Language" prefWidth="120"/>
+                <ComboBox fx:id="langCombo" prefWidth="180"/>
+            </HBox>
+            <HBox spacing="16" alignment="CENTER_LEFT">
+                <Label fx:id="lblCurrency" text="Currency" prefWidth="120"/>
+                <ComboBox fx:id="currencyCombo" prefWidth="180"/>
+            </HBox>
+            <HBox spacing="16" alignment="CENTER_LEFT">
+                <Label fx:id="lblDateMode" text="Date Format" prefWidth="120"/>
+                <ComboBox fx:id="dateModeCombo" prefWidth="180"/>
+            </HBox>
+        </VBox>
+
+        <!-- Security -->
+        <VBox styleClass="settings-section" spacing="12">
+            <Label fx:id="lblSecurity" text="Security" styleClass="settings-section-title"/>
+            <HBox spacing="16" alignment="CENTER_LEFT">
+                <Label fx:id="lblPin" text="PIN Lock" prefWidth="120"/>
+                <Button fx:id="btnSetPin" text="Set PIN" onAction="#setPin" styleClass="btn-secondary"/>
+                <Button fx:id="btnClearPin" text="Remove PIN" onAction="#clearPin" styleClass="btn-danger"/>
+            </HBox>
+        </VBox>
+
+        <!-- Backup -->
+        <VBox styleClass="settings-section" spacing="12">
+            <Label fx:id="lblBackup" text="Backup &amp; Restore" styleClass="settings-section-title"/>
+            <HBox spacing="16" alignment="CENTER_LEFT">
+                <Button fx:id="btnBackup" text="Backup" onAction="#backup" styleClass="btn-secondary"/>
+                <Button fx:id="btnRestore" text="Restore" onAction="#restore" styleClass="btn-danger"/>
+            </HBox>
+        </VBox>
+
+        <!-- Save -->
+        <HBox alignment="CENTER_RIGHT">
+            <Button fx:id="btnSave" text="Save" onAction="#save" styleClass="btn-primary"/>
+        </HBox>
+    </VBox>
+</ScrollPane>

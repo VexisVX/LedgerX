@@ -1,0 +1,52 @@
+.root {
+    -fx-bg: #f0f4f8;
+    -fx-bg-sidebar: #ffffff;
+    -fx-card: #ffffff;
+    -fx-card-alt: #f8fafc;
+    -fx-input-bg: #f1f5f9;
+    -fx-border: #d8e0e8;
+    -fx-hover: #e8eef4;
+    -fx-text-strong: #0a1622;
+    -fx-text-main: #2a3a4a;
+    -fx-text-sub: #5a6a7a;
+    -fx-text-muted: #8a96a6;
+    -fx-text-faint: #b0b8c4;
+    -fx-accent: #00a884;
+    -fx-accent2: #0092ff;
+    -fx-accent-soft: rgba(0,168,132,0.12);
+    -fx-accent-border: rgba(0,168,132,0.45);
+    -fx-accent-glow: rgba(0,168,132,0.3);
+    -fx-income: #00a884;
+    -fx-expense: #e04545;
+    -fx-expense-soft: rgba(224,69,69,0.08);
+    -fx-expense-soft2: rgba(224,69,69,0.18);
+    -fx-expense-border: rgba(224,69,69,0.4);
+    -fx-base: #f0f4f8;
+    -fx-background: #f0f4f8;
+    -fx-control-inner-background: #ffffff;
+
+    /* stage 4 theme vars */
+    -fx-income-soft: rgba(0,168,132,0.10);
+    -fx-income-border: rgba(0,168,132,0.30);
+    -fx-expense-soft: rgba(224,69,69,0.10);
+    -fx-expense-border: rgba(224,69,69,0.30);
+    -fx-remain-soft: rgba(37,99,235,0.10);
+    -fx-remain-border: rgba(37,99,235,0.30);
+    -fx-warning: #e08e0b;
+    -fx-warning-dark: #c97a0a;
+    -fx-expense-dark: #c93030;
+    -fx-shadow: rgba(0,0,0,0.15);
+    -fx-chart-grid: rgba(180,190,200,0.30);
+}
+
+/* Pie chart colors — brighter for light themes */
+.category-slice-0 { -fx-pie-color: #e08e0b; }
+.category-slice-1 { -fx-pie-color: #2563eb; }
+.category-slice-2 { -fx-pie-color: #9333ea; }
+.category-slice-3 { -fx-pie-color: #059669; }
+.category-slice-4 { -fx-pie-color: #db2777; }
+.category-slice-5 { -fx-pie-color: #dc2626; }
+.category-slice-6 { -fx-pie-color: #ca8a04; }
+.category-slice-7 { -fx-pie-color: #0891b2; }
+.category-slice-8 { -fx-pie-color: #7c3aed; }
+.category-slice-9 { -fx-pie-color: #ea580c; }

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="io.github.vexisvx.ledgerx.ui.controller.GoalsController"
+            styleClass="content-area">
+    <top>
+        <VBox spacing="14">
+            <HBox styleClass="page-header" alignment="CENTER_LEFT" spacing="12">
+                <Label text="🏆" styleClass="page-header-icon"/>
+                <VBox spacing="0" HBox.hgrow="ALWAYS">
+                    <Label fx:id="lblTitle" text="Savings Goals" styleClass="page-header-title"/>
+                    <Label fx:id="lblSubtitle" text="" styleClass="page-subtitle"/>
+                </VBox>
+                <Button fx:id="btnNew" text="+ New Goal" onAction="#add" styleClass="btn-primary"/>
+            </HBox>
+        </VBox>
+    </top>
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-padding: 14 0 0 0;">
+            <StackPane>
+                <TilePane fx:id="goalGrid" styleClass="goal-grid" prefColumns="3" hgap="14" vgap="14"/>
+                <VBox fx:id="emptyState" styleClass="empty-state" visible="false" managed="false">
+                    <Label text="🏆" styleClass="empty-icon"/>
+                    <Label fx:id="lblEmptyTitle" text="No goals yet" styleClass="empty-title"/>
+                    <Label fx:id="lblEmptyDesc" text="Create your first savings goal to get started" styleClass="empty-desc"/>
+                    <Button text="+ New Goal" onAction="#add" styleClass="btn-primary"/>
+                </VBox>
+            </StackPane>
+        </ScrollPane>
+    </center>
+</BorderPane>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="io.github.vexisvx.ledgerx.ui.controller.MainController"
+            prefWidth="1280" prefHeight="800">
+    <left>
+        <VBox styleClass="sidebar" spacing="4" prefWidth="230">
+            <HBox styleClass="brand-box" spacing="12" alignment="CENTER_LEFT">
+                <StackPane styleClass="brand-logo" prefWidth="42" prefHeight="42" maxWidth="42" maxHeight="42">
+                    <Label text="LX" styleClass="brand-logo-label"/>
+                </StackPane>
+                <VBox spacing="0">
+                    <Label text="LedgerX" styleClass="brand-name"/>
+                    <Label text="Finance Manager" styleClass="brand-tag"/>
+                </VBox>
+            </HBox>
+
+            <Region prefHeight="8"/>
+
+            <Button fx:id="btnDashboard" onAction="#showDashboard" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button fx:id="btnTransactions" onAction="#showTransactions" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button fx:id="btnCategories" onAction="#showCategories" styleClass="nav-button" maxWidth="Infinity"/>
+            <HBox alignment="CENTER_LEFT" spacing="6" maxWidth="Infinity">
+                <Button fx:id="btnBudgets" onAction="#showBudgets" styleClass="nav-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Label fx:id="lblBudgetsBadge" text="0" styleClass="nav-badge badge-budget" visible="false" managed="false"/>
+            </HBox>
+            <Button fx:id="btnGoals" onAction="#showGoals" styleClass="nav-button" maxWidth="Infinity"/>
+            <HBox alignment="CENTER_LEFT" spacing="6" maxWidth="Infinity">
+                <Button fx:id="btnRecurring" onAction="#showRecurring" styleClass="nav-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Label fx:id="lblRecurringBadge" text="0" styleClass="nav-badge badge-rec" visible="false" managed="false"/>
+            </HBox>
+            <Button fx:id="btnSettings" onAction="#showSettings" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button fx:id="btnAbout" onAction="#showAbout" styleClass="nav-button" maxWidth="Infinity"/>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <VBox styleClass="sidebar-footer" spacing="4">
+                <Label text="LedgerX v2.0.0" styleClass="sidebar-footer-label"/>
+                <Label fx:id="lblBrandFooter" text="A VexisVX Project" styleClass="sidebar-footer-label"/>
+            </VBox>
+        </VBox>
+    </left>
+    <center>
+        <StackPane fx:id="contentArea" styleClass="content-area"/>
+    </center>
+</BorderPane>

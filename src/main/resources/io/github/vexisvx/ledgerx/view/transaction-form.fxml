@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="io.github.vexisvx.ledgerx.ui.controller.TransactionFormController"
+      styleClass="form-dialog" spacing="10" prefWidth="440">
+
+    <Label fx:id="lblFormTitle" text="New Transaction" styleClass="page-title"/>
+
+    <Label fx:id="lblType" text="Type" styleClass="form-label"/>
+    <ComboBox fx:id="typeCombo" maxWidth="Infinity"/>
+
+    <Label fx:id="lblAmount" text="Amount" styleClass="form-label"/>
+    <TextField fx:id="amountField" promptText="0.00"/>
+
+    <Label fx:id="lblDate" text="Date" styleClass="form-label"/>
+    <DatePicker fx:id="datePicker" maxWidth="Infinity"/>
+
+    <Label fx:id="lblTxTitle" text="Title" styleClass="form-label"/>
+    <TextField fx:id="titleField" promptText="e.g. Coffee"/>
+
+    <Label fx:id="lblCategory" text="Category" styleClass="form-label"/>
+    <ComboBox fx:id="categoryCombo" maxWidth="Infinity"/>
+
+    <Label fx:id="lblDescription" text="Description (optional)" styleClass="form-label"/>
+    <TextArea fx:id="descArea" prefRowCount="3" wrapText="true"/>
+    <Label fx:id="lblDescCount" text="0 / 500" style="-fx-text-fill: #6a7a8a; -fx-font-size: 10px;"/>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button fx:id="btnCancel" text="Cancel" onAction="#cancel" styleClass="btn-secondary"/>
+        <Button fx:id="btnSave" text="Save" onAction="#save" styleClass="btn-primary"/>
+    </HBox>
+</VBox>

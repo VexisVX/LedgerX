@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="io.github.vexisvx.ledgerx.ui.controller.AboutController"
+      styleClass="about-dialog" spacing="14" prefWidth="440">
+
+    <HBox spacing="14" alignment="CENTER_LEFT">
+        <StackPane styleClass="brand-logo" prefWidth="64" prefHeight="64" maxWidth="64" maxHeight="64">
+            <Label text="LX" styleClass="brand-logo-label" style="-fx-font-size: 28px;"/>
+        </StackPane>
+        <VBox spacing="2">
+            <Label text="LedgerX" styleClass="about-name"/>
+            <Label fx:id="lblVersion" text="v2.0.0" styleClass="about-version"/>
+        </VBox>
+    </HBox>
+
+    <Separator/>
+
+    <GridPane hgap="16" vgap="8">
+        <Label text="Author" styleClass="about-row-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <Label text="Younes Ahmadi" styleClass="about-author" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Brand" styleClass="about-row-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <Label text="VexisVX" styleClass="about-brand" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="License" styleClass="about-row-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <Label text="MIT" styleClass="about-row-value" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Built With" styleClass="about-row-label" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <Label text="Java 21 • JavaFX • SQLite" styleClass="about-row-value" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+        <Label text="Languages" styleClass="about-row-label" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <Label text="فارسی / English" styleClass="about-row-value" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+        <Label text="GitHub" styleClass="about-row-label" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+        <Hyperlink text="github.com/VexisVX" styleClass="about-row-value" GridPane.rowIndex="5" GridPane.columnIndex="1"
+                   onAction="#openGitHub"/>
+    </GridPane>
+
+    <Separator/>
+
+    <VBox spacing="2" alignment="CENTER">
+        <Label text="© 2026 Younes Ahmadi" styleClass="about-row-label"/>
+        <Label text="A VexisVX Project" styleClass="about-brand"/>
+    </VBox>
+
+    <Button fx:id="btnClose" text="Close" onAction="#close" styleClass="btn-primary" maxWidth="Infinity"/>
+</VBox>
