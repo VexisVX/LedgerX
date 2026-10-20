@@ -38,10 +38,24 @@ mvnw.cmd
 *.tmp
 *.bak
 
-# JavaFX jmods / app-image
-javafx-jmods-*
+# Scripts (build/setup/fix)
+*.sh
+!run.sh
+
+# JavaFX / jpackage
+javafx-jmods*
 javafx-jmods.zip
 javafx-libs/
 pkg-input/
-wine-*/
 windows-jdk/
+wine-*/
+*.tar.gz
+*.zip
+
+# Native
+*.so
+*.dll
+*.dylib
+
+# jar (توی release آپلود می‌شه)
+*.jar
