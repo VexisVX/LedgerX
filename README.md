@@ -46,3 +46,4 @@ git clone https://github.com/VexisVX/LedgerX.git
 cd LedgerX
 mvn clean compile
 mvn javafx:run
+# LedgerX
